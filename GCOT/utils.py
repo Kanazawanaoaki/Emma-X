@@ -76,36 +76,31 @@ def get_soft_plus_gripper_segment(sample):
             delta_states[0]
         ] + delta_states  # add first element to make it same length as states
 
-    instruction = sample["task"]["language_instruction"][0].decode("utf-8")
-    images = sample["observation"]["image_primary"]
-    images = [
-        tf.io.decode_image(
-            images[i][0], expand_animations=False, dtype=tf.uint8
-        ).numpy()
-        for i in range(len(images))
-    ]
-    full_state = sample["observation"]["proprio"][:, 0, [0, 1, 2, 3, 4, 5]]
-    assert sum(sample["observation"]["proprio"][:, 0, 6]) == 0
+    instruction = sample['task'][0]
+    images = sample['images']
+    # full_state = sample["observation"]["proprio"][:, 0, [0, 1, 2, 3, 4, 5]]
+    # assert sum(sample["observation"]["proprio"][:, 0, 6]) == 0
     # full_state = sample["action"][:, 0, [0, 1, 2, 3, 4, 5]]
 
     gripper_action = sample["action"][
-        :, 0, -1
+        :, -1
     ]  # here to use action instead of gripper state
     # because action only take value between 0, 1
     gripper_segment = np.array(segment_gripper(gripper_action))
 
     # spatial_state = get_delta([o[:3] for o in full_state])
     # orient_state = get_delta([o[3:-1] for o in full_state])
-    # spatial_segment = np.array(segment_traj(spatial_state, distance="euclidean"))
-    # orient_segment = np.array(segment_traj(orient_state, distance="euclidean"))
-    # overall_segment = spatial_segment * 1e4 + orient_segment * 1e2 + gripper_segment
+    spatial_state = sample['action'][:, :3]
+    orient_state = sample['action'][:, 3:-1]
+    spatial_segment = np.array(segment_traj(spatial_state, distance="euclidean"))[0]
+    orient_segment = np.array(segment_traj(orient_state, distance="euclidean"))[0]
+    overall_segment = spatial_segment * 1e4 + orient_segment * 1e2 + gripper_segment
 
     # eff_pose = get_delta(full_state)
-    eff_pose = full_state
-    processed_segs, segs = segment_traj(eff_pose, distance="euclidean")
-    pose_segment = np.array(processed_segs)
-    overall_segment = pose_segment * 1e2 + gripper_segment
-
+    # eff_pose = full_state
+    # processed_segs, segs = segment_traj(eff_pose, distance="euclidean")
+    # pose_segment = np.array(processed_segs)
+    # overall_segment = pose_segment * 1e2 + gripper_segment
     key_frames, segment_count = get_key_frames(images, overall_segment)
 
     return (instruction, key_frames, segment_count), overall_segment
@@ -373,7 +368,7 @@ def describe_move(move_vec):
     assert len(move_vec) == 7
     names = [
         {False: "move backward", True: "move forward"},
-        {False: "move right", True: "move left"},
+        {False: "move right", True:     "move left"},
         {False: "move downward", True: "move upward"},
         {False: "roll downward", True: "roll upward"},
         {False: "pitch downward", True: "pitch upward"},
