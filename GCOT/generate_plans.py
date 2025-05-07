@@ -10,6 +10,7 @@ import google.generativeai as genai
 from tqdm import tqdm
 import lerobot
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetadata  
+from dataset import LeRobotEMMADataset
 
 
 from utils import get_soft_plus_gripper_segment as segment_method
@@ -78,9 +79,8 @@ def segment_to_keyinfo(content):
 
 
 def main(split, load_prev=None):
-    from dataset import LeRobotNILSDataset
     repo_id = "IPEC-COMMUNITY/austin_buds_dataset_lerobot"
-    dataset = LeRobotNILSDataset(repo_id)
+    dataset = LeRobotEMMADataset(repo_id)
     samples = []
 
     if load_prev is not None:
@@ -90,49 +90,6 @@ def main(split, load_prev=None):
     else:
         key_infos = dict()
 
-    # dataset_len = 0
-    # dataset_len = len(dataset)
-
-    # for i, samp in enumerate(tqdm(iter(dataset), total=dataset_len)):
-    #     episode_id = samp['episode_index'].item()
-    #     file_path = str(dataset.meta.get_data_file_path(episode_id))
-    #     episode_id = str(episode_id)
-    #     if (file_path + "|" + episode_id) in key_infos:
-    #         continue
-
-        # if i % 1000 == 999:
-        #     with multiprocessing.Pool(128) as pool:
-        #         processed_segments = list(pool.imap(segment_method, samples))
-        #         outputs, overall_segments = zip(*processed_segments)
-
-        #     ## actual magic happens
-        #     with multiprocessing.Pool(128) as pool:
-        #         model_outputs = list(pool.imap(segment_to_keyinfo, outputs))
-        #     for (instruction, _, _), overall_segment, sam, model_output in zip(
-        #         outputs, overall_segments, samples, model_outputs
-        #     ):
-        #         file_path = sam["file_path"][0].decode("utf-8")
-        #         episode_id = str(sam["episode_id"][0])
-        #         key_infos[file_path + "|" + episode_id] = (
-        #             instruction,
-        #             overall_segment.tolist(),
-        #             model_output,
-        #         )
-        #     with open(f"plans/{int(len(key_infos)/1000)}.json", "w") as f:
-        #         json.dump(key_infos, f, indent=4)
-        #     ## ends
-
-        #     samples = []
-
-        # samples.append(samp)
-    # with multiprocessing.Pool(128) as pool:
-    #     processed_segments = list(pool.imap(segment_method, samples))
-    #     outputs, overall_segments = zip(*processed_segments)
-
-    ## actual magic happens
-    # with multiprocessing.Pool(128) as pool:
-    #     model_outputs = list(pool.imap(segment_to_keyinfo, outputs))
-    
     for i in range(len(dataset)):
         samples = dataset[i]
         outputs, overall_segments = segment_method(samples)

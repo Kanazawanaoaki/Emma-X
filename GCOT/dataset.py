@@ -4,7 +4,7 @@ import lerobot
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetadata
 
 
-class LeRobotNILSDataset(LeRobotDataset):
+class LeRobotEMMADataset(LeRobotDataset):
     def __init__(self, data_id, image_key='image', sampling_rate=10, name="lerobot_dataset", **kwargs):
         super().__init__(data_id, episodes=[0, 1, 2, 3, 4])
 
