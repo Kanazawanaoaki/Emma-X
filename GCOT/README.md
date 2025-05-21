@@ -22,3 +22,18 @@ download [link](https://huggingface.co/datasets/Embodied-CoT/embodied_features_b
 3. run dataset by `python create_dataset.py`
 
 
+# AIROA team2 dataset creation
+## Installation
+```bash
+conda create -n gcot python=3.10
+conda activate gcot
+
+pip install -r requirements.txt
+
+conda install ffmpeg -c conda-forge
+```
+
+## Usage
+```bash
+python generate_plans.py
+```
