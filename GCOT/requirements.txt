@@ -10,3 +10,6 @@ mediapy
 rich
 scikit-learn
 git+https://github.com/huggingface/lerobot.git
+transformers  # Hugging Face Transformers
+moviepy
+ipdb

@@ -51,8 +51,22 @@ make pickles for tests
 python save_in_pkl.py
 ```
 
-gemini api test
-```
-python test_gemini_api.py -e 0
+(visualize segment data with images and videos)
+```bash
+python segment_movies.py -e 0
 ```
 
+gemini api test
+```bash
+python test_gemini_api.py -e 0 # episode_id 0~4
+```
+
+internVL3 execution as a flat image list
+```bash
+python test_internvl3_flat_list.py -e 0
+```
+
+internVL3 execution with segment step
+```bash
+python test_internvl3_segment_step.py -e 0
+```
