@@ -2,3 +2,4 @@
 action_instruction
 gripper_info
 ipynb
+*.pkl

@@ -37,3 +37,22 @@ conda install ffmpeg -c conda-forge
 ```bash
 python generate_plans.py
 ```
+
+### Use Gemini API
+```bash
+# mkdir plans ## If not exit yet.
+export GOOGLE_API_KEY=[YOUR GOOGLE API KEY]
+python gemini_generate_plans.py
+```
+
+### VLM part test
+make pickles for tests
+```bash
+python save_in_pkl.py
+```
+
+gemini api test
+```
+python test_gemini_api.py -e 0
+```
+
