@@ -13,3 +13,5 @@ git+https://github.com/huggingface/lerobot.git
 transformers  # Hugging Face Transformers
 moviepy
 ipdb
+qwen-vl-utils[decord]==0.0.8
+accelerate

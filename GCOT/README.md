@@ -70,3 +70,13 @@ internVL3 execution with segment step
 ```bash
 python test_internvl3_segment_step.py -e 0
 ```
+
+Qwen2.5VL execution as a flat image list
+```bash
+python test_qwen_2_5_flat_list.py -e 0
+```
+
+Qwen2.5VL execution with segment step
+```bash
+python test_qwen_2_5_segment_step.py -e 0
+```
