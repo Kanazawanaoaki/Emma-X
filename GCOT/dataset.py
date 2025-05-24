@@ -2,11 +2,12 @@ import os, sys
 import numpy as np
 import lerobot
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetadata
+from tqdm import tqdm
 
 
 class LeRobotEMMADataset(LeRobotDataset):
-    def __init__(self, data_id, image_key='image', sampling_rate=10, name="lerobot_dataset", **kwargs):
-        super().__init__(data_id, episodes=[0, 1, 2, 3, 4])
+    def __init__(self, data_id, image_key='image', sampling_rate=10, name="lerobot_dataset", episodes=[0, 1, 2, 3, 4], **kwargs):
+        super().__init__(data_id, episodes=episodes)
 
         self.paths = []
         self.frame_names = []
@@ -16,7 +17,10 @@ class LeRobotEMMADataset(LeRobotDataset):
 
         self.sampling_rate = sampling_rate
 
-        for i, episode_idx in enumerate(self.episodes):
+        if self.episodes == None:
+            self.episodes = list(range(self.num_episodes))
+        print(f"current episodes: {self.episodes}")
+        for i, episode_idx in enumerate(tqdm(self.episodes, desc="Episodes", unit="ep"), start=0):
             self.paths.append(self.meta.get_data_file_path(episode_idx))
 
             start_idx = self.episode_data_index['from'][i].item()
@@ -35,7 +39,7 @@ class LeRobotEMMADataset(LeRobotDataset):
                     delta_action = action[:-1]
                 else:
                     delta_action += action[:-1]
-                
+
                 if t % self.sampling_rate == 0:
                     task = data['task']
                     image = data[f'observation.images.{image_key}'] * 255.0
@@ -54,9 +58,9 @@ class LeRobotEMMADataset(LeRobotDataset):
 
         self.name = name
 
-    def __getitem__(self, idx):        
+    def __getitem__(self, idx):
         frames = self.trajectories[idx]
-        
+
         data = {}
         data['task'] = self.tasks[idx]
         data["images"] = frames
